@@ -1511,6 +1511,7 @@ class RTCSctpTransport(AsyncIOEventEmitter):
         # send FORWARD TSN
         if self._forward_tsn_chunk is not None:
             self._flight_size_reset()
+            self._last_sacked_tsn = max(self._forward_tsn_chunk.cumulative_tsn, self._last_sacked_tsn)
             await self._send_chunk(self._forward_tsn_chunk)
             self._forward_tsn_chunk = None
 
