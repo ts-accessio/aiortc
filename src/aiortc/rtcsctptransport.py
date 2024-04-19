@@ -787,6 +787,9 @@ class RTCSctpTransport(AsyncIOEventEmitter):
     def _flight_size_increase(self, chunk: DataChunk) -> None:
         self._flight_size += chunk._book_size  # type: ignore
 
+    def _flight_size_reset(self) -> None:
+        self._flight_size = 0
+
     def _get_extensions(self, params: List[Tuple[int, bytes]]) -> None:
         """
         Gets what extensions are supported by the remote party.
@@ -1507,6 +1510,7 @@ class RTCSctpTransport(AsyncIOEventEmitter):
         """
         # send FORWARD TSN
         if self._forward_tsn_chunk is not None:
+            self._flight_size_reset()
             await self._send_chunk(self._forward_tsn_chunk)
             self._forward_tsn_chunk = None
 
